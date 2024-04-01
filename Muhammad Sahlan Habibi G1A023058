@@ -1,0 +1,124 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+vector<string> tokenize(const string& str){
+    vector<string> tokens;
+    string token;
+    for (char c : str)
+    {
+        if (c == ' ')
+        {
+            tokens.push_back(token);
+            token.clear();
+        }
+        else{
+            token += c;
+        }
+    }
+    tokens.push_back(token);
+    return tokens;
+}
+
+void pushStack(stack<string>& dataStack, const string& data){
+    dataStack.push(data);
+}
+
+int main()
+{
+    vector<string> namaTim;
+    vector<string> namaStadion;
+    vector<string> namaPelatih;
+    vector<int> tahunBerdiri;
+    stack<string> namaTimStack;
+    stack<string> namaStadionStack;
+    stack<string> namaPelatihStack;
+    stack<int> tahunBerdiriStack;
+
+    while (true)
+    {
+        cout << "Menu:\n1. Masukan informasi tim sepakbola\n2. Cari Informasi tim sepakbola\n3. Keluar\nPilih salah satu diatas : ";
+        int pilihan;
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            cin.ignore();
+            cout << "Masukan informasi tim sepakbola : \n";
+            string tim, stadion, pelatih;
+            int berdiri;
+
+            cout << "Nama tim : ";
+            getline(cin, tim);
+            cout << "Nama stadion : ";
+            getline(cin, stadion);
+            cout << "Nama pelatih : ";
+            getline(cin, pelatih);
+            cout << "Tahun Berdiri : ";
+            cin >> berdiri;
+
+            namaTim.push_back(tim);
+            namaStadion.push_back(stadion);
+            namaPelatih.push_back(pelatih);
+            tahunBerdiri.push_back(berdiri);
+
+            pushStack(namaTimStack, tim);
+            pushStack(namaStadionStack, stadion);
+            namaPelatihStack.push(pelatih);
+            tahunBerdiriStack.push(berdiri);
+
+            cout << "Informasi tim sepakbola telah disimpan \n\n";
+        }
+        else if (pilihan == 2)
+        {
+            cin.ignore();
+            cout << "Masukan kata kunci pencarian : ";
+            string kataKunci;
+            getline(cin, kataKunci);
+
+            vector<string> kunciPencarian = tokenize(kataKunci);
+
+            cout << "Hasil Pencarian\n";
+            bool ditemukan = false;
+            for (size_t i = 0; i < namaTim.size(); ++i)
+            {
+                bool semuaDitemukan = true;
+                for (const string& kunci : kunciPencarian)
+                {
+                    if (namaTim[i].find(kunci) == string::npos && namaStadion[i].find(kunci) == string::npos &&
+                    namaPelatih[i].find(kunci) == string::npos)
+                    {
+                        semuaDitemukan = false;
+                        break;
+                    }
+                }
+                if (semuaDitemukan)
+                {
+                    cout << "Nama Tim = " << namaTim[i] << endl;
+                    cout << "Nama Stadion = " << namaStadion[i] << endl;
+                    cout << "Nama Pelatih = " << namaPelatih[i] << endl;
+                    cout << "Tahun Berdiri = " << tahunBerdiri[i] << endl;
+                    ditemukan = true;
+                }
+            }
+            if (!ditemukan)
+            {
+                cout << "Tim sepakbola tidak ditemukan\n\n";
+            }
+        }
+        else if (pilihan == 3)
+        {
+            cout << "Terimakasih telah menggunakan layanan kami. \n";
+            break;
+        }
+        else
+        {
+            cout << "Pilihan tidak valid.\n";
+        }
+    }
+    return 0;
+}
